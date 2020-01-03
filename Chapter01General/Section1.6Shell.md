@@ -1,5 +1,9 @@
 # Shell
 
+- [Shell](#shell)
+  - [shell variable](#shell-variable)
+  - [shell loop](#shell-loop)
+
 shell运行command
 - fork产生的子进程exec(command)
 - 父进程切换到后台等待回收子进程
@@ -214,3 +218,36 @@ moris@ubuntu:~$ echo '$MYVAR+666'
 $MYVAR+666
 ```
 
+## shell loop
+
+```bash
+#! /bin/sh
+
+for FRUIT in apple banana pear; do
+    echo "I like $FRUIT"
+done
+```
+
+```bash
+#! /bin/sh
+
+echo "Enter password:"
+# 读取的变量存入TRY
+read TRY
+# "$TRY"表示变量
+while [ "$TRY" != "secret" ]; do
+    echo "Sorry, try again"
+    read TRY
+done
+```
+
+```bash
+#! /bin/sh
+
+COUNTER=1 # COUNTER是字符串"1"
+while [ "$COUNTER" -lt 10 ]; do
+    echo "Here we go again"
+    # 字符串转换为数值: $(())
+    COUNTER=$(($COUNTER+1))
+done
+```
