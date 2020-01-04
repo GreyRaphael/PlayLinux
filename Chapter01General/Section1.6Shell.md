@@ -6,6 +6,7 @@
   - [shell loop](#shell-loop)
   - [shell function](#shell-function)
   - [shell tools](#shell-tools)
+  - [shell problem](#shell-problem)
 
 shell运行command
 - fork产生的子进程exec(command)
@@ -636,3 +637,171 @@ moris@ubuntu:~$ awk '{print $2;}' testfile
 55
 ```
 
+## shell problem
+
+example: 两个数求和
+
+```bash
+#! /bin/bash
+first=0
+second=0
+read -p 'enter first number:' first
+read -p 'enter second number:' second
+result=$[$first+$second]
+echo "result is : $result"
+exit 0
+```
+
+example: 计算1-100的和
+
+```bash
+#! /bin/bash
+
+SUM=0
+I=0
+
+while [ $I -le 100 ]; do
+    SUM=$((SUM+I))
+    I=$((I+1))
+done
+
+echo "$SUM"
+```
+
+example: 将一目录下所有的文件的扩展名改为bak
+
+```bash
+#! /bin/bash
+
+for i in *.*; do
+    mv $i ${i%%.*}.bak
+done
+```
+
+example: 编译当前目录下的所有.c文件
+
+```bash
+#! /bin/bash
+
+for file in *.c; do
+    echo $file
+    gcc -o $(basename $file .c) $file
+    sleep 2
+done
+```
+
+example: 打印root可以使用可执行文件数
+> `echo $(find ./ -type f|xargs ls -l|sed '/-..x/p' | wc -l)`
+
+example: 打印当前sshd的端口和进程id
+> `netstat -apn|grep sshd|sed -n 's/.*:::\([0-9]*\)\ .* \ \([0-9]*\)\/sshd/\1 \2/p'`
+
+example: 输出本机创建20000个目录所用的时间
+
+```bash
+#! /bin/bash
+
+time (
+    for i in {1. 20000}; do
+        mkdir /tmp/nnn$i
+)
+```
+
+example: 打印本机的交换分区大小
+> `free -m|sed -n '/Swap/p'|awk '{print $2}'`
+
+example: 文本分析，取出/etc/password中shell出现的次数
+> `cat /etc/passwd | awk -F: '{if ($7!="") print $7}'|sort|uniq -c`  
+> `-F:`, 指定:为分隔符
+
+example: 文件整理，employee文件中记录了工号和姓名
+> `join employee.txt bonus.txt |sort -k 2`
+
+```bash
+# employee.txt
+100 Jason Smith 
+200 John Doe 
+300 Sanjay Gupta 
+400 Ashok Sharma 
+
+# bonus.txt
+100 $5,000 
+200 $500 
+300 $3,000 
+400 $1,250 
+
+# output
+400 ashok sharma $1,250
+100 jason smith  $5,000
+200 john doe  $500
+300 sanjay gupta  $3,000
+```
+
+example: 写一个shell脚本来得到当前的日期，时间，用户名和当前工作目录
+
+```bash
+#! /bin/bash
+
+echo "Hello, $LOGNAME"
+echo "date= `date`"
+echo "user=`whoami`"
+echo "dir=`pwd`"
+```
+
+example: 编写shell脚本获取本机的网络地址
+> `ifconfig eth0|grep 'inet '|awk '{print $2}'`  
+> `ifconfig eth0|grep 'inet '|awk '{print $4}'`  
+
+example: 编写个shell脚本将当前目录下大于10K的文件转移到/tmp目录下
+
+```bash
+#! /bin/bash
+
+for filename in `ls -l|awk '$5>10240 {print $9}'`; do
+    mv $filename /tmp
+done
+
+ls -al /tmp
+echo "Done!"
+exit 0
+```
+
+example:编写一个名为myfirstshell.sh的脚本，它包括以下内容。
+- 包含一段注释，列出您的姓名、脚本的名称和编写这个脚本的目的。
+- 问候用户。
+- 显示日期和时间。
+- 显示这个月的日历。
+- 显示您的机器名。
+- 显示当前这个操作系统的名称和版本。
+- 显示父目录中的所有文件的列表。
+- 显示root正在运行的所有进程。
+- 显示变量TERM、PATH和HOME的值。
+- 显示磁盘使用情况。
+- 用id命令打印出您的组ID。
+
+```bash
+#! /bin/bash
+
+user=`whoami`
+
+case $user in
+root)
+    echo "hello root";;
+*)
+    echo "hello $user"
+esac
+
+echo `date`
+echo `cal`
+echo `uname -n`
+echo `uname -s;uname -r`
+echo `ls ../`
+echo `ps -u root`
+echo "$TERM"
+echo "$PATH"
+echo "$HOME"
+echo `df`
+echo `id -g`
+
+exit 0
+```
