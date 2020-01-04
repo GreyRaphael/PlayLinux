@@ -386,3 +386,51 @@ while [ "$COUNTER" -lt 10 ]; do
     COUNTER=$(($COUNTER+1))
 done
 ```
+
+example: argv
+
+```bash
+#! /bin/sh
+
+echo $0
+echo $1
+echo $2
+echo $3
+
+# 不包含$0的参数个数
+echo $#
+# 参数列表，用于for ... in ...
+echo $@
+# 参数列表，同上
+echo $*
+# 上一条命令的Exit Status
+echo $?
+# 当前进程号
+echo $$
+```
+
+example: shift command
+
+```bash
+#! /bin/sh
+
+echo "The program $0 is now running"
+echo "The first parameter is $1"
+echo "The second parameter is $2"
+echo "The parameter list is $@"
+shift
+echo "The first parameter is $1"
+echo "The second parameter is $2"
+echo "The parameter list is $@"
+```
+
+```bash
+moris@ubuntu:~$ source t1.sh arg1 arg2 arg3
+The program -bash is now running
+The first parameter is arg1
+The second parameter is arg2
+The parameter list is arg1 arg2 arg3
+The first parameter is arg2
+The second parameter is arg3
+The parameter list is arg2 arg3
+```
