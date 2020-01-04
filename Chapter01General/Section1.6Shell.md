@@ -2,6 +2,7 @@
 
 - [Shell](#shell)
   - [shell variable](#shell-variable)
+  - [shell condition](#shell-condition)
   - [shell loop](#shell-loop)
 
 shell运行command
@@ -218,7 +219,54 @@ moris@ubuntu:~$ echo '$MYVAR+666'
 $MYVAR+666
 ```
 
-example: shell condition
+example: `echo`
+
+```bash
+moris@ubuntu:~$ echo 'hello\n\n'
+hello\n\n
+moris@ubuntu:~$ echo -e 'hello\n\n'
+hello
+
+
+moris@ubuntu:~$ echo -n 'hello\n\n'
+hello\n\nmoris@ubuntu:~$
+```
+
+example: `tee`, tee命令把结果输出到标准输出，另一个副本输出到相应文件。
+
+```bash
+moris@ubuntu:~$ ls |tee test.txt
+anaconda3
+dump.rdb
+Fund
+JupyterWork
+nohup.out
+seaborn-data
+t1.sh
+test.txt
+```
+
+standard input & output
+- stdin: 0
+- stdout: 1
+- stderr: 2
+
+```bash
+cmd > file             #把标准输出重定向到新文件中
+cmd >> file            #追加
+cmd > file 2>&1        #标准出错也重定向到1屏幕上，但是1已经重定向到了file, 所以标准出错也重定向到文件
+cmd >> file 2>&1
+cmd < file1 > file2    #从file1获得输入，将结果重定向到file2
+cmd < &fd              #把文件描述符fd作为标准输入
+cmd > &fd              #把文件描述符fd作为标准输出
+cmd < &-               #关闭标准输入
+
+# 不想看输出，重定向到黑洞
+ll > /dev/null
+```
+
+## shell condition
+
 > `test` is the same as `[]`
 
 ```bash
