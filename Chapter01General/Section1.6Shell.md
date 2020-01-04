@@ -218,6 +218,141 @@ moris@ubuntu:~$ echo '$MYVAR+666'
 $MYVAR+666
 ```
 
+example: shell condition
+> `test` is the same as `[]`
+
+```bash
+# 数值比较大小 -eq, -ne, -gt, -ge, -lt, -le
+moris@ubuntu:~$ VAR1=6
+moris@ubuntu:~$ test $VAR1 -gt 1
+moris@ubuntu:~$ echo $?
+0
+moris@ubuntu:~$ test $VAR1 -lt 1
+moris@ubuntu:~$ echo $?
+1
+moris@ubuntu:~$ [ $VAR1 -lt 1 ]
+moris@ubuntu:~$ echo $?
+1
+
+# check directory
+moris@ubuntu:~$ [ -d anaconda3 ]
+moris@ubuntu:~$ echo $?
+0
+
+# 字符串比较相等、不相等: == , !=
+moris@ubuntu:~$ s1=hello
+moris@ubuntu:~$ s2=hello
+moris@ubuntu:~$ s3=world
+moris@ubuntu:~$ [ s1 == s2 ]
+moris@ubuntu:~$ echo $?
+1
+moris@ubuntu:~$ [ $s1 == $s2 ]
+moris@ubuntu:~$ echo $?
+0
+moris@ubuntu:~$ [ $s1 == $s3 ]
+moris@ubuntu:~$ echo $?
+1
+
+moris@ubuntu:~$ s4=
+moris@ubuntu:~$ [ $s1 == $s4 ]
+-bash: [: hello: unary operator expected
+# 对于空字符串需要用""
+moris@ubuntu:~$ [ "$s1" == "$s4" ]
+moris@ubuntu:~$ echo $?
+1
+
+# 与或非: !, -a, -o
+# 最好用""将变量包含起来，避免空变量导致的bug
+moris@ubuntu:~$ unset s1
+moris@ubuntu:~$ [ -d anaconda3 -a "$s1" = 'hello' ]
+moris@ubuntu:~$ echo $?
+1
+```
+
+example: if else
+
+```bash
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+    echo 'hello world'
+fi
+
+
+if [ -f /bin/bash ]
+then 
+    echo "/bin/bash is a file"
+    echo "/bin/bash is a file"
+    echo "/bin/bash is a file"
+else 
+    echo "/bin/bash is NOT a file"
+    echo "/bin/bash is NOT a file"
+    echo "/bin/bash is NOT a file"
+fi
+
+
+if :; then echo "always true"; fi
+```
+
+```bash
+#! /bin/sh
+
+echo "Is it morning? Please answer yes or no."
+read YES_OR_NO
+if [ "$YES_OR_NO" = "yes" ]; then
+    echo "Good morning!"
+elif [ "$YES_OR_NO" = "no" ]; then
+    echo "Good afternoon!"
+else
+    echo "Sorry, $YES_OR_NO not recognized. Enter yes or no."
+    exit 1
+fi
+exit 0
+```
+
+```bash
+#! /bin/sh
+
+echo "Is it morning? Please answer yes or no."
+read YES_OR_NO
+case "$YES_OR_NO" in
+yes|y|Yes|YES)
+    echo "Good Morning!"
+    echo "Good Morning!"
+    echo "Good Morning!"
+    echo "Good Morning!";;
+[nN]*)
+    echo "Good Afternoon!";;
+*)
+    echo "Sorry, $YES_OR_NO not recognized. Enter yes or no."
+    exit 1;;
+
+# ;;是结束标志
+# esac表示case语句结束
+esac
+exit 0
+```
+
+```bash
+# 常见于/etc/init.d/配置文件中，比如nginx -s stop
+case "$1" in
+    start)
+        ...
+    ;;
+    stop)
+        ...
+    ;;
+    reload | force-reload)
+        ...
+    ;;
+    restart)
+    ...
+    *)
+        log_success_msg "Usage: nfs-kernel-server {start|stop|status|reload|force-reload|restart}"
+        exit 1
+    ;;
+esac
+```
+
 ## shell loop
 
 ```bash
