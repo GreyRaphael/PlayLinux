@@ -5,6 +5,7 @@
   - [shell condition](#shell-condition)
   - [shell loop](#shell-loop)
   - [shell function](#shell-function)
+  - [shell tools](#shell-tools)
 
 shell运行command
 - fork产生的子进程exec(command)
@@ -559,3 +560,79 @@ for DIR in "$@"; do
     fi
 done
 ```
+
+## shell tools
+
+shell配合如下工具使用效果更佳
+- grep
+- find
+- xargs
+- sed: 行处理工具
+- awk: 行处理工具+列处理工具
+
+tip: Basic 正则与Extend正则不同，Python, `egrep`, `grep -E`, `sed -r`是Extend正则，`?+{}|()`不用特殊处理；`grep`, `sed`是Basic正则，需要`\`处理
+
+```bash
+# file
+192.168.1.1
+1234.234.04.5678
+123.4234.045.678
+abcde
+```
+
+```bash
+moris@ubuntu:~$ vim file
+# basic regex
+moris@ubuntu:~$ grep '([0-9]{1,3}\.){3}[0-9]{1,3}' file
+moris@ubuntu:~$ grep '\([0-9]\{1,3\}\.\)\{3\}[0-9]\{1,3\}' file
+192.168.1.1
+1234.234.04.5678
+# extend regex
+moris@ubuntu:~$ egrep '([0-9]{1,3}\.){3}[0-9]{1,3}' file
+192.168.1.1
+1234.234.04.5678
+moris@ubuntu:~$ grep -E '([0-9]{1,3}\.){3}[0-9]{1,3}' file
+192.168.1.1
+1234.234.04.5678
+```
+
+example: exec vs xargs
+
+```bash
+# 找到文件之后再执行，但find的结果可能太多，导致溢出
+find . -perm -7 -print -exec chmod o-w
+# 找到一批，执行一批，不会溢出
+find . -perm -7 -print | xargs chmod o-w
+```
+
+example: `sed`去掉html的tag
+> `sed`行处理工具
+
+```bash
+moris@ubuntu:~$ cat test.html
+<html><head><title>Hello World</title></head>
+<body>Welcome to the world of regexp!</body></html>
+moris@ubuntu:~$ sed 's/<[^>]*>/ /g' test.html
+   Hello World
+ Welcome to the world of regexp!
+```
+
+example: `awk`
+
+```bash
+# 打印第1列
+ps ax|awk '{print $1;}'
+# $0代表一行
+```
+
+```bash
+moris@ubuntu:~$ cat testfile
+ProductA  30
+ProductB  76
+ProductC  55
+moris@ubuntu:~$ awk '{print $2;}' testfile
+30
+76
+55
+```
+
