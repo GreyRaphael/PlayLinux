@@ -30,7 +30,7 @@ example: 检测上一个程序执行是否成功
 
 ```bash
 moris@ubuntu:~$ pwd
-# 上一个程序执行成功
+# 上一个程序执行的Exit Status，0表示成功
 moris@ubuntu:~$ echo $?
 0
 
