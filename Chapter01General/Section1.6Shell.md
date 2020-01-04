@@ -4,6 +4,7 @@
   - [shell variable](#shell-variable)
   - [shell condition](#shell-condition)
   - [shell loop](#shell-loop)
+  - [shell function](#shell-function)
 
 shell运行command
 - fork产生的子进程exec(command)
@@ -481,4 +482,80 @@ The parameter list is arg1 arg2 arg3
 The first parameter is arg2
 The second parameter is arg3
 The parameter list is arg2 arg3
+```
+
+## shell function
+
+```bash
+#! /bin/sh
+
+foo(){ echo "Function foo is called";}
+
+
+echo "-=start=-"
+foo
+echo "-=end=-"
+```
+
+```bash
+#! /bin/sh
+
+foo(){ 
+    echo $0
+    echo $1
+    echo $2
+    echo "Function foo is called";
+}
+
+
+echo "-=start=-"
+foo aa bb cc
+echo "-=end=-"
+```
+
+```bash
+# output
+(base) moris@ubuntu:~$ vim t1.sh
+(base) moris@ubuntu:~$ source t1.sh
+-=start=-
+-bash
+aa
+bb
+Function foo is called
+-=end=-
+(base) moris@ubuntu:~$ chmod +x t1.sh
+(base) moris@ubuntu:~$ ./t1.sh
+-=start=-
+./t1.sh
+aa
+bb
+Function foo is called
+-=end=-
+```
+
+```bash
+#! /bin/sh
+
+is_directory()
+{
+    DIR_NAME=$1
+    if [ ! -d $DIR_NAME ]; then
+    return 1
+    else
+    return 0
+    fi
+}
+
+for DIR in "$@"; do
+    if is_directory "$DIR"
+    then :
+    else
+    echo "$DIR doesn't exist. Creating it now..."
+    mkdir $DIR > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Cannot create directory $DIR"
+        exit 1
+    fi
+    fi
+done
 ```
