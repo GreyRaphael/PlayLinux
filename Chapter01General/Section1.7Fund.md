@@ -9,6 +9,43 @@
 3. 配置安全组，设置可访问的port
 4. ssh连接服务器root账号
 
+## Config Port
+
+如果是ECS, 将如下保存为csv并导入阿里云安全组
+
+```csv
+"网络类型","授权方向","授权策略","IP协议","端口范围","优先级","源IP地址段","源IPv6地址段","源安全组","源端安全组名称","源安全组所属阿里云账户ID","源端端口范围","目标IP地址段","目的IPv6地址段","目标安全组","目的端安全组名称","目标安全组所属阿里云账户ID","描述信息","创建时间（UTC）","",""
+"intranet","ingress","Accept","TCP","5000/5000","1","0.0.0.0/0","","","","","","","","","","","Flask","2021-03-03T03:11:31Z","",""
+"intranet","ingress","Accept","TCP","465/465","1","0.0.0.0/0","","","","","","","","","","","mail","2021-03-03T03:11:16Z","",""
+"intranet","ingress","Accept","TCP","8888/8888","1","0.0.0.0/0","","","","","","","","","","","Jupyter","2021-03-03T03:11:03Z","",""
+"intranet","ingress","Accept","TCP","80/80","1","0.0.0.0/0","","","","","","","","","","","http","2021-03-03T03:10:43Z","",""
+"intranet","ingress","Accept","TCP","6379/6379","1","0.0.0.0/0","","","","","","","","","","","redis","2021-03-03T03:10:36Z","",""
+"intranet","ingress","Accept","TCP","3306/3306","1","0.0.0.0/0","","","","","","","","","","","MySQL","2021-03-03T03:10:29Z","",""
+"intranet","ingress","Accept","TCP","443/443","1","0.0.0.0/0","","","","","","","","","","","https","2021-03-03T03:10:21Z","",""
+"intranet","ingress","Accept","TCP","22/22","1","0.0.0.0/0","","","","","","","","","","","ssh","2021-03-03T03:10:14Z","",""
+"intranet","ingress","Accept","TCP","27017/27017","1","0.0.0.0/0","","","","","","","","","","","MongoDB","2021-03-03T03:10:04Z","",""
+"intranet","ingress","Accept","TCP","8050/8050","1","0.0.0.0/0","","","","","","","","","","","scrapinghub/splash	","2021-03-03T03:09:16Z","",""
+"intranet","egress","Accept","TCP","3306/3306","1","","","","","","","0.0.0.0/0","","","","","For MySQL","2018-12-20T16:02:20Z","",""
+"intranet","egress","Accept","TCP","6379/6379","1","","","","","","","0.0.0.0/0","","","","","Redis out","2018-12-18T08:16:09Z","",""
+"intranet","egress","Accept","TCP","5671/5672","1","","","","","","","0.0.0.0/0","","","","","For RabbitMQ Out","2018-12-11T04:03:25Z","",""
+```
+
+如果是轻量服务器，直接输入
+
+| 应用类型  | 协议  | 端口范围  | 备注                 |
+|-------|-----|-------|--------------------|
+| HTTP  | TCP | 80    |                    |
+| HTPS  | TCP | 443   |                    |
+| SSH   | TCP | 22    |                    |
+| MYSQL | TCP | 3306  | MySQL              |
+| 自定义   | TCP | 5000  | Flask              |
+| 自定义   | TCP | 465   | Mail               |
+| 自定义   | TCP | 8888  | Jupyter            |
+| 自定义   | TCP | 6379  | Redis              |
+| 自定义   | TCP | 27017 | MongoDB            |
+| 自定义   | TCP | 8050  | scrapinghub/splash |
+
+
 ## Add sudo user
 
 ```bash
@@ -105,7 +142,8 @@ sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf
 mysql -u root -p
 
 CREATE USER 'root'@'%' IDENTIFIED BY 'new_password';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'new_password' WITH GRANT OPTION;
+# GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'new_password' WITH GRANT OPTION;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 
 flush privileges;
 exit
@@ -139,12 +177,19 @@ c.NotebookApp.open_browser = False
 
 ```bash
 # 测试一下
-jupyter lab
+jupyter notebook
 
 Ctrl+C
 
 # 启动远程
-nohup jupyter lab ~/JupyterWork/ &
+mkdir JupyterWork
+nohup jupyter notebook ~/JupyterWork/ &
 
 # 远程访问 xxx.xxx.xxx.xxx:8888, 并输入密码
+```
+
+## Install Other Python Package
+
+```bash
+pip install schedule
 ```
