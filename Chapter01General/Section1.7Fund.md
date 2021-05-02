@@ -156,7 +156,9 @@ ps -ef|grep mysql
 pip install mysql-connector-python
 ```
 
-## Config JupyterLab
+## Config Jupyter
+
+### Jupyter Notebook
 
 ```bash
 jupyter notebook --generate-config
@@ -184,6 +186,40 @@ Ctrl+C
 # 启动远程
 mkdir JupyterWork
 nohup jupyter notebook ~/JupyterWork/ &
+
+# 远程访问 xxx.xxx.xxx.xxx:8888, 并输入密码
+```
+
+### Jupyterlab
+
+> Jupyterlab随着更新，配置方式可能改变，但Jupyter Notebook一直稳定可以使用
+
+```bash
+jupyter server --generate-config
+# 生成配置文件: ~/.jupyter/jupyter_server_config.py
+
+jupyter lab password
+# 生成加密的密码: ~/.jupyter/jupyter_server_config.json
+```
+
+```py
+# jupyter_server_config.py
+c.NotebookApp.ip = '' 
+# 阿里云''默认是私有ip
+# 将jupyter_server_config.json里面的密码复制到这
+c.NotebookApp.password = "sha1:9ba3e4304a4a:d322d173f6f43a74e3445c75aa02c218f2759a1c"
+c.NotebookApp.open_browser = False
+```
+
+```bash
+# 测试一下
+jupyter lab
+
+Ctrl+C
+
+# 启动远程
+mkdir JupyterWork
+nohup jupyter lab ~/JupyterWork/ &
 
 # 远程访问 xxx.xxx.xxx.xxx:8888, 并输入密码
 ```
