@@ -229,3 +229,29 @@ nohup jupyter lab ~/JupyterWork/ &
 ```bash
 pip install schedule
 ```
+
+## Install Redis
+
+```bash
+sudo apt install redis-server
+ps -ax|grep redis
+
+# 配置remote redis
+sudo vim /etc/redis/redis.conf
+
+# 注释掉bind
+bind 127.0.0.1
+# 修改requirepass
+requirepass your_password
+```
+
+```bash
+sudo systemctl restart redis-server
+sudo systemctl enable redis-server
+
+redis-cli
+127.0.0.1:6379> auth your_password
+OK
+127.0.0.1:6379> ping
+PONG
+```
