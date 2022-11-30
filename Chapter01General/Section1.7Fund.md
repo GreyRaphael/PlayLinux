@@ -80,6 +80,28 @@ conda update --all
 conda clean --all
 ```
 
+## Install Miniconda
+
+```bash
+wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/Miniconda3-xxx-Linux-x86_64.sh
+
+chmod +x Miniconda3-xxx-Linux-x86_64.sh
+
+./Miniconda3-xxx-Linux-x86_64.sh
+
+# 配置conda源
+# https://mirrors.tuna.tsinghua.edu.cn/help/anaconda/
+
+# 配置pip源头
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+conda update --all
+
+conda install jupyterlab
+
+conda clean --all
+```
+
 ## Install MongoDB
 
 ```bash
@@ -91,7 +113,8 @@ mongo -version
 sudo systemctl start mongodb
 
 sudo vim /etc/mongodb.conf
-# 将bind改为0.0.0.0
+# 将bind_ip = 0.0.0.0
+# 将auth = true
 
 sudo systemctl restart mongodb
 sudo systemctl enable mongodb
