@@ -278,3 +278,36 @@ OK
 127.0.0.1:6379> ping
 PONG
 ```
+
+## Remote Login without Password
+
+> 通过public key，不通过密码登录remote linux
+
+```bash
+# in windows
+# 使用git产生privata key 和public key，一直Enter
+ssh-keygen -t rsa -C "youremail@example.com"
+
+# 在 %USERPROFILE%/.ssh目录下面生成两个文件
+id_rsa
+id_rsa.pub
+
+# 将id_rsa.pub复制到remote linux
+```
+
+```bash
+# in remote Linux
+# 注意: 将内容复制到 authorized_keys，独占一行，不能有回车
+cat id_rsa.pub > ~/.ssh/authorized_keys
+
+# 可能还需要配置linux权限
+sudo vim /etc/ssh/sshd_config
+# 取消如下注释
+# AuthorizedKeysFile      .ssh/authorized_keys .ssh/authorized_keys2
+
+# 可能需要配置访问
+chmod 600 .ssh/authorized_keys
+chmod 700 .ssh
+
+sudo service sshd restart
+```
