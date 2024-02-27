@@ -311,3 +311,24 @@ chmod 700 .ssh
 
 sudo service sshd restart
 ```
+
+## Aliyun with Fedora
+
+```bash
+sudo dnf upgrade --refresh
+sudo dnf install fedora-repos-rawhide
+sudo dnf --enablerepo=rawhide update --nogpgcheck
+sudo dnf -y autoremove   
+sudo dnf -y clean all   
+sudo mandb  
+sudo dnf upgrade --refresh
+cat /etc/fedora-release
+
+
+adduser james
+passwd james
+# add sudo
+sudo usermod -aG wheel james
+su james
+sudo dnf update
+```
